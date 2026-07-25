@@ -5,6 +5,7 @@ import os
 import platform
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -68,7 +69,7 @@ def collect_device_info() -> dict[str, Any]:
     checks = {
         "android": result["is_android"],
         "arm64": architecture in {"aarch64", "arm64", "arm64-v8a"},
-        "python_ready": platform.python_version_tuple() >= ("3", "11", "0"),
+        "python_ready": sys.version_info >= (3, 11),
         "minimum_ram_4gb": total_ram_gb >= 4,
         "minimum_free_storage_8gb": free_storage_gb >= 8,
     }
