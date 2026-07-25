@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>Sankofa Mini PC</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <p class="eyebrow">ANDROID • LOCAL-FIRST • OPEN SOURCE</p>
+        <h1>Sankofa Mini PC</h1>
+        <p class="subtitle">Your phone. Your computer. Your AI.</p>
+      </div>
+      <div id="status" class="status">Checking…</div>
+    </header>
+
+    <section class="grid">
+      <article class="panel chat-panel">
+        <div class="panel-title">
+          <h2>Local Chat</h2>
+          <span id="model">Loading model…</span>
+        </div>
+        <div id="messages" class="messages">
+          <div class="message assistant">Sankofa is starting locally on this device.</div>
+        </div>
+        <form id="chat-form">
+          <textarea id="message" rows="3" placeholder="Message your local AI…" required></textarea>
+          <button type="submit">Send locally</button>
+        </form>
+      </article>
+
+      <aside class="panel system-panel">
+        <div class="panel-title"><h2>Phone Status</h2></div>
+        <dl id="system-info">
+          <div><dt>Device</dt><dd>Checking…</dd></div>
+        </dl>
+        <p class="privacy">No cloud model is being called in this foundation release. The mock backend proves that the server, UI and memory are local.</p>
+      </aside>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
