@@ -6,7 +6,7 @@ Sankofa Mini PC is a repo-first, headless system that runs inside Termux and exp
 
 > **Your phone. Your computer. Your AI.**
 
-[**Check My Phone**](https://aiwithenoch.github.io/Sankofa-Mini-PC-Android-/) · [Installation](#quick-start) · [Roadmap](docs/ROADMAP.md)
+[**Check My Phone**](https://sankofa-mini-pc-android.vercel.app/) · [Installation](#quick-start) · [Roadmap](docs/ROADMAP.md)
 
 ## Current status
 
@@ -40,7 +40,7 @@ The repository intentionally builds the complete system around the model first. 
 
 ### 1. Check your phone
 
-Open the [browser checker](https://aiwithenoch.github.io/Sankofa-Mini-PC-Android-/). It performs a quick estimate before installation. The terminal checker remains the accurate source of truth.
+Open the [browser checker](https://sankofa-mini-pc-android.vercel.app/). It performs a quick estimate before installation. The terminal checker remains the accurate source of truth.
 
 ### 2. Install Termux
 
