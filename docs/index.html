@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sankofa Mini PC — Check My Phone</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color-scheme: dark; background:#07100d; color:#ecfdf5; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:radial-gradient(circle at top,#123328,#07100d 55%); }
+    main { width:min(760px,92vw); margin:auto; padding:48px 0; }
+    .card { background:rgba(6,24,18,.92); border:1px solid #245c49; border-radius:22px; padding:24px; margin-top:18px; }
+    h1 { font-size:clamp(2.4rem,8vw,5rem); line-height:.95; letter-spacing:-.05em; margin:.2em 0; }
+    .tag { color:#6ee7b7; font-weight:800; letter-spacing:.14em; font-size:.72rem; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    label { display:grid; gap:7px; color:#a7f3d0; }
+    input { width:100%; padding:12px; border-radius:11px; border:1px solid #356b59; background:#071712; color:white; }
+    button { border:0; border-radius:12px; padding:13px 17px; font-weight:800; background:#6ee7b7; color:#052e23; cursor:pointer; }
+    dl div { display:flex; justify-content:space-between; gap:20px; padding:10px 0; border-bottom:1px solid #23483c; }
+    dd { margin:0; text-align:right; }
+    .result { font-size:1.15rem; font-weight:800; color:#6ee7b7; }
+    .warning { color:#fcd34d; line-height:1.5; }
+    code { background:#061b14; padding:3px 6px; border-radius:6px; }
+    @media(max-width:620px){ .grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+<main>
+  <p class="tag">SANKOFA MINI PC • ANDROID</p>
+  <h1>Can my phone run it?</h1>
+  <p>This quick check uses information your browser exposes. The terminal checker remains the accurate source of truth.</p>
+
+  <section class="card">
+    <h2>Detected</h2>
+    <dl id="detected"></dl>
+  </section>
+
+  <section class="card">
+    <h2>Add the missing specs</h2>
+    <div class="grid">
+      <label>Phone model<input id="model" placeholder="Example: REDMAGIC 10 Pro"></label>
+      <label>RAM in GB<input id="ram" type="number" min="1" placeholder="Example: 24"></label>
+      <label>Free storage in GB<input id="storage" type="number" min="1" placeholder="Example: 800"></label>
+      <label>Android version<input id="android" placeholder="Example: 15"></label>
+    </div>
+    <p><button id="check">Check compatibility</button></p>
+    <p id="result" class="result"></p>
+    <p class="warning">Full Kimi K3 requirements are not confirmed yet. A “K3 research candidate” result means the phone is worth testing; it is not a promise that K3 will run.</p>
+  </section>
+
+  <section class="card">
+    <h2>Accurate check after Termux</h2>
+    <p>Install Sankofa, then run:</p>
+    <p><code>sankofa check</code></p>
+  </section>
+</main>
+<script>
+const detected = document.getElementById('detected');
+const ua = navigator.userAgent;
+const isAndroid = /Android/i.test(ua);
+const cores = navigator.hardwareConcurrency || 'Unknown';
+const browserRam = navigator.deviceMemory || 'Not exposed';
+const rows = [
+  ['Android detected', isAndroid ? 'Yes' : 'No'],
+  ['CPU threads', cores],
+  ['Browser RAM estimate', browserRam === 'Not exposed' ? browserRam : `${browserRam} GB`],
+  ['64-bit hint', /arm64|aarch64|x86_64/i.test(ua) ? 'Likely' : 'Unknown']
+];
+detected.innerHTML = rows.map(([k,v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+if (browserRam !== 'Not exposed') document.getElementById('ram').value = browserRam;
+
+document.getElementById('check').onclick = () => {
+  const ram = Number(document.getElementById('ram').value || 0);
+  const storage = Number(document.getElementById('storage').value || 0);
+  let result = 'Enter RAM and free storage to continue.';
+  if (ram && storage) {
+    if (!isAndroid) result = 'This browser does not appear to be running on Android.';
+    else if (ram >= 20 && storage >= 700) result = 'K3 research candidate — strong enough for our experimental track.';
+    else if (ram >= 8 && storage >= 32) result = 'Local AI agent ready — suitable for Sankofa and smaller local models.';
+    else if (ram >= 4 && storage >= 8) result = 'Foundation ready — Sankofa should run, but local model choices will be limited.';
+    else result = 'Below the current foundation recommendation.';
+  }
+  document.getElementById('result').textContent = result;
+};
+</script>
+</body>
+</html>
