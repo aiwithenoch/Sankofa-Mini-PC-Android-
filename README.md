@@ -6,6 +6,8 @@ Sankofa Mini PC is a repo-first, headless system that runs inside Termux and exp
 
 > **Your phone. Your computer. Your AI.**
 
+[**Check My Phone**](https://aiwithenoch.github.io/Sankofa-Mini-PC-Android-/) · [Installation](#quick-start) · [Roadmap](docs/ROADMAP.md)
+
 ## Current status
 
 **Foundation release — v0.1.0**
@@ -13,6 +15,7 @@ Sankofa Mini PC is a repo-first, headless system that runs inside Termux and exp
 Working now:
 
 - One-command Termux installation
+- Quick browser compatibility checker
 - Accurate terminal device checker
 - Headless local server
 - Browser dashboard at `http://127.0.0.1:8787`
@@ -35,14 +38,18 @@ The repository intentionally builds the complete system around the model first. 
 
 ## Quick start
 
-### 1. Install Termux
+### 1. Check your phone
+
+Open the [browser checker](https://aiwithenoch.github.io/Sankofa-Mini-PC-Android-/). It performs a quick estimate before installation. The terminal checker remains the accurate source of truth.
+
+### 2. Install Termux
 
 Install the current Termux release from its official F-Droid or GitHub release page. The old Google Play build is not recommended.
 
 - F-Droid: https://f-droid.org/packages/com.termux/
 - GitHub: https://github.com/termux/termux-app/releases
 
-### 2. Run one command
+### 3. Run one command
 
 Open Termux and paste:
 
@@ -50,7 +57,7 @@ Open Termux and paste:
 curl -fsSL https://raw.githubusercontent.com/aiwithenoch/Sankofa-Mini-PC-Android-/main/install.sh | bash
 ```
 
-### 3. Open the dashboard
+### 4. Open the dashboard
 
 ```text
 http://127.0.0.1:8787
