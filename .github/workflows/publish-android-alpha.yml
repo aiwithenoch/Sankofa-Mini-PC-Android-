@@ -1,0 +1,91 @@
+name: Publish Android Alpha
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/publish-android-alpha.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish alpha APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK components
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager \
+            'platform-tools' \
+            'platforms;android-35' \
+            'build-tools;35.0.0' \
+            'ndk;27.2.12479018' \
+            'cmake;3.22.1'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build debug alpha APK
+        run: gradle -p android :app:assembleDebug --stacktrace
+
+      - name: Prepare release files
+        run: |
+          mkdir -p dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+            dist/Sankofa-Mini-PC-0.2.0-alpha-debug.apk
+          cd dist
+          sha256sum Sankofa-Mini-PC-0.2.0-alpha-debug.apk > SHA256SUMS.txt
+          cat > RELEASE_NOTES.md <<'EOF'
+          # Sankofa Mini PC Android 0.2.0 Alpha
+
+          This is the first installable Android control-app alpha.
+
+          Working in this build:
+          - phone RAM, storage, ABI and CPU profiling;
+          - native C++/JNI runtime boundary;
+          - local Sankofa service health check;
+          - resumable HTTPS model downloads using Range and ETag;
+          - SHA-256 verification before model activation;
+          - verified Qwen3 0.6B Q8 starter-model entry;
+          - optional approval-gated Composio gateway controls.
+
+          Important limits:
+          - this APK is debug-signed for testing, not a production Play Store build;
+          - llama.cpp and Colibri inference are not embedded yet;
+          - downloading the starter model works, but local token generation is the next milestone;
+          - Composio requires deployment of the separate gateway and private secrets.
+          EOF
+
+      - name: Publish or refresh prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v0.2.0-alpha.1
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" \
+              dist/Sankofa-Mini-PC-0.2.0-alpha-debug.apk \
+              dist/SHA256SUMS.txt \
+              --clobber
+          else
+            gh release create "$TAG" \
+              dist/Sankofa-Mini-PC-0.2.0-alpha-debug.apk \
+              dist/SHA256SUMS.txt \
+              --target "$GITHUB_SHA" \
+              --title 'Sankofa Mini PC Android 0.2.0 Alpha' \
+              --notes-file dist/RELEASE_NOTES.md \
+              --prerelease
+          fi
