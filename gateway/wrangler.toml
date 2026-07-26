@@ -1,0 +1,9 @@
+name = "sankofa-agent-gateway"
+main = "src/index.ts"
+compatibility_date = "2026-07-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGIN = "https://sankofa-mini-pc-android.vercel.app"
+ALLOWED_TOOL_PREFIXES = "GMAIL_,GOOGLECALENDAR_,GOOGLEDRIVE_,NOTION_,GITHUB_,SLACK_"
+COMPOSIO_BASE_URL = "https://backend.composio.dev"
