@@ -14,15 +14,67 @@ Sankofa uses proof-driven milestones. A task is complete only when the repositor
 - [x] OpenAI-compatible endpoint skeleton
 - [x] Public phone checker on Vercel
 
-## Milestone 2 — Android massive-model runtime proof
+## Milestone 2 — Android application foundation
 
-This is the immediate priority.
+- [x] Jetpack Compose Android project
+- [x] Device RAM, storage, ABI and CPU profiling
+- [x] Capability tiers for lite, standard, performance and research devices
+- [x] JNI/C++ native-runtime boundary
+- [x] Local Sankofa daemon health check
+- [x] Foreground model-download worker
+- [x] HTTP Range and ETag continuation for interrupted downloads
+- [x] SHA-256 and optional byte-size verification
+- [x] Atomic model activation after verification
+- [x] Official verified starter-model catalog entry
+- [x] Android APK build workflow
+- [ ] Install and smoke-test the APK on physical ARM64 phones
+- [ ] Publish a signed alpha APK through GitHub Releases
+
+## Milestone 3 — Real everyday local inference
+
+This is the next product milestone.
+
+- [ ] Pin and audit a compatible `llama.cpp` revision
+- [ ] Compile `llama.cpp` for Android ARM64 through the NDK
+- [ ] Load the verified Qwen3 0.6B starter GGUF
+- [ ] Stream tokens into the Compose chat interface
+- [ ] Add generation cancellation and timeout handling
+- [ ] Add context-length, thread-count and RAM budgets
+- [ ] Add thermal throttling and background resource release
+- [ ] Benchmark 4 GB, 6 GB, 8 GB, 12 GB and 16 GB phones
+- [ ] Add larger catalog models only after measured device testing
+
+## Milestone 4 — Agent computer
+
+- [x] Optional Composio gateway boundary
+- [x] Composio project key kept outside the APK
+- [x] Toolkit-prefix allowlist
+- [x] Read/write/destructive risk classification
+- [x] One-time user approval for external writes
+- [x] Destructive cloud tools blocked by default
+- [x] Gateway TypeScript CI
+- [ ] Replace the private-alpha shared token with per-user authentication
+- [ ] Persistent local task queue
+- [ ] Tool registry with exact-slug policies
+- [ ] Planner-to-tool-call protocol
+- [ ] Result verification and retry rules
+- [ ] Filesystem tools
+- [ ] Local document search
+- [ ] Browser worker
+- [ ] Calendar and Gmail read/draft workflows
+- [ ] Procedural and episodic memory
+- [ ] Privacy-preserving audit history
+
+## Milestone 5 — Android massive-model runtime proof
 
 - [x] Document Colibri as a runtime candidate
 - [x] Add a non-model Termux probe script
 - [ ] Run the probe on a real ARM64 Android phone
 - [ ] Compile Colibri with Termux clang
 - [ ] Pass the bundled tiny self-test at the expected result
+- [ ] Pin and audit an Android-compatible Colibri revision
+- [ ] Preserve Apache-2.0 notices and attribution
+- [ ] Link Colibri behind the existing JNI contract
 - [ ] Record exact phone, Android, Termux and compiler versions
 - [ ] Measure internal-storage sequential and random-read performance
 - [ ] Record sustained CPU temperature and frequency behaviour
@@ -31,57 +83,51 @@ This is the immediate priority.
 
 Success at this milestone proves only that the engine can execute correctly on Android. It does not prove that a frontier model is fast, thermally sustainable or small enough for the phone.
 
-## Milestone 3 — Sankofa runtime adapter
+## Milestone 6 — Adaptive runtime governor
 
-- [ ] Define a native subprocess/FFI adapter contract
-- [ ] Add Colibri process lifecycle management
-- [ ] Convert runtime output into Sankofa streaming events
-- [ ] Expose runtime health and placement telemetry
-- [ ] Add generation cancellation and timeout handling
-- [ ] Add RAM, storage and thermal budgets
-- [ ] Keep MockBackend available for testing
-- [ ] Add a smaller real-model backend for everyday phones
+- [ ] Monitor Android thermal status and available memory
+- [ ] Reduce thread count and cache size under pressure
+- [ ] Pause generation at severe thermal levels
+- [ ] Unload models before the operating system kills the app
+- [ ] Choose model profiles from measured device capability
+- [ ] Preserve tasks and conversations across native-runtime crashes
+- [ ] Keep the user interface responsive in a separate process
 
-## Milestone 4 — Reliable server
+## Milestone 7 — Reliable local server
 
 - [ ] Streaming token responses
 - [ ] API authentication
 - [ ] Structured configuration file
-- [ ] Automatic startup with Termux:Boot
+- [ ] Automatic startup with Termux:Boot where supported
 - [ ] Watchdog and crash recovery
 - [ ] Database backups and migrations
 - [ ] Release checksums and signed installer
 
-## Milestone 5 — Model manager
+## Milestone 8 — Production model manager
 
-- [ ] Model manifests
+- [x] Resumable single-file downloads
+- [x] SHA-256 verification
+- [x] Atomic activation
+- [ ] Signed model manifests
 - [ ] Storage reservation before download
-- [ ] Resumable shard downloads
+- [ ] Resumable multi-shard downloads
 - [ ] Per-shard checksums
-- [ ] Atomic activation and rollback
+- [ ] Mirror failover
+- [ ] Activation rollback
 - [ ] Runtime/model compatibility checks
 - [ ] Safe model removal
-- [ ] Download and thermal pause/resume policies
+- [ ] Wi-Fi-only and charging-only policies
+- [ ] Android reboot recovery tests
 
-## Milestone 6 — Agent computer
-
-- [ ] Persistent task queue
-- [ ] Tool registry
-- [ ] Permission and approval engine
-- [ ] Filesystem tools
-- [ ] Local document search
-- [ ] Browser worker
-- [ ] Procedural and episodic memory
-
-## Milestone 7 — Mini cloud
+## Milestone 9 — Mini cloud
 
 - [ ] Authenticated LAN access
 - [ ] Optional encrypted remote access
 - [ ] Multi-user isolation
-- [ ] Rate limits and audit trail
+- [ ] Per-user rate limits and audit trail
 - [ ] Webhook receiver
 
-## Milestone 8 — Kimi K3 research
+## Milestone 10 — Kimi K3 research
 
 - [ ] Inspect an official checkpoint and licence
 - [ ] Publish an exact tensor and storage report
