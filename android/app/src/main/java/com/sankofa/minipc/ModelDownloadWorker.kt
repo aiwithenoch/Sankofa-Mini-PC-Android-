@@ -3,6 +3,7 @@ package com.sankofa.minipc
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -153,7 +154,11 @@ class ModelDownloadWorker(
             .setProgress(100, progress, progress == 0)
             .build()
 
-        return ForegroundInfo(NOTIFICATION_ID, notification)
+        return ForegroundInfo(
+            NOTIFICATION_ID,
+            notification,
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
+        )
     }
 
     private fun failure(reason: String, actualSize: Long = -1L): Result = Result.failure(
