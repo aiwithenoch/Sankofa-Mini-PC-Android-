@@ -12,6 +12,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Validate shell syntax
+        run: |
+          bash -n install.sh
+          bash -n uninstall.sh
+          bash -n experiments/colibri-termux/probe.sh
       - run: python -m pip install --upgrade pip
       - run: pip install -e . pytest
       - run: python -m compileall sankofa
