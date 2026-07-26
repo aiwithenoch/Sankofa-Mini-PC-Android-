@@ -70,14 +70,15 @@ private fun SankofaApp() {
     val scope = rememberCoroutineScope()
     val profile = remember { DeviceProfiler.detect(context) }
     val nativeInfo = remember { NativeRuntime.info() }
+    val starterModel = remember { ModelCatalog.starter }
     val json = remember { Json { ignoreUnknownKeys = true } }
 
     var runtimeStatus by remember { mutableStateOf("Not checked") }
-    var modelUrl by remember { mutableStateOf("") }
-    var modelName by remember { mutableStateOf("model.gguf") }
-    var modelSha by remember { mutableStateOf("") }
+    var modelUrl by remember { mutableStateOf(starterModel.downloadUrl) }
+    var modelName by remember { mutableStateOf(starterModel.fileName) }
+    var modelSha by remember { mutableStateOf(starterModel.sha256) }
     var modelSize by remember { mutableStateOf("") }
-    var downloadStatus by remember { mutableStateOf("No download queued") }
+    var downloadStatus by remember { mutableStateOf("Starter model ready to download") }
 
     var gatewayUrl by remember { mutableStateOf("") }
     var gatewayToken by remember { mutableStateOf("") }
@@ -147,6 +148,9 @@ private fun SankofaApp() {
                 }
 
                 SectionCard("Verified model download") {
+                    Text("Starter: ${starterModel.displayName} · ${starterModel.license}")
+                    Text(starterModel.description)
+                    Text("Downloading is implemented; local generation still needs the llama.cpp runtime integration.")
                     OutlinedTextField(
                         value = modelUrl,
                         onValueChange = { modelUrl = it },
@@ -162,7 +166,7 @@ private fun SankofaApp() {
                     OutlinedTextField(
                         value = modelSha,
                         onValueChange = { modelSha = it },
-                        label = { Text("SHA-256 (recommended)") },
+                        label = { Text("SHA-256") },
                         modifier = Modifier.fillMaxWidth(),
                     )
                     OutlinedTextField(
