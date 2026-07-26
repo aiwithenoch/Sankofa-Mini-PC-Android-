@@ -2,11 +2,11 @@
 
 **Turn an Android phone into a self-hosted local AI computer.**
 
-Sankofa Mini PC is a repo-first, headless system that runs inside Termux and exposes a browser dashboard, local API, persistent memory, agent services, device monitoring, and a pluggable inference runtime. It is not primarily an Android app.
+Sankofa Mini PC is a repo-first, headless system that runs inside Termux and exposes a browser dashboard, local API, persistent memory, agent services, device monitoring, and pluggable inference runtimes. It is not primarily an Android app.
 
 > **Your phone. Your computer. Your AI.**
 
-[**Check My Phone**](https://sankofa-mini-pc-android.vercel.app/) · [Installation](#quick-start) · [Roadmap](docs/ROADMAP.md)
+[**Check My Phone**](https://sankofa-mini-pc-android.vercel.app/) · [Installation](#quick-start) · [Android runtime experiment](experiments/colibri-termux/README.md) · [Roadmap](docs/ROADMAP.md)
 
 ## Current status
 
@@ -27,6 +27,8 @@ Working now:
 
 Not implemented yet:
 
+- Real local inference in the default installer
+- Colibri runtime on Android
 - Full Kimi K3 runtime
 - Local browser automation
 - Agent tool execution
@@ -34,7 +36,47 @@ Not implemented yet:
 - Automatic boot setup
 - Model shard downloader
 
-The repository intentionally builds the complete system around the model first. Kimi K3 will be inserted through the stable model-backend interface after its checkpoint format is available and studied.
+## Current research direction
+
+Sankofa is now evaluating [Colibri](https://github.com/JustVugg/colibri) as an optional runtime for models that are much larger than available RAM.
+
+Colibri demonstrates a useful architecture for very large Mixture-of-Experts models: keep dense components and hot experts in fast memory, keep the larger expert set on storage, and stream selected experts when the router needs them.
+
+This does **not** mean that Colibri, GLM-5.2, or Kimi K3 already runs on Android. The immediate engineering goal is narrower and measurable:
+
+> Compile Colibri inside Termux on an ARM64 Android phone and pass its tiny architecture self-test.
+
+Sankofa remains the Android product layer: installer, lifecycle management, device checks, downloads, dashboard, API, memory, permissions, agents, thermal controls, and runtime adapters. Colibri is being evaluated as one possible massive-MoE inference engine behind that layer.
+
+No Colibri source code is currently vendored into this repository. Any future source integration must preserve its Apache-2.0 licence and attribution requirements. See [`docs/COLIBRI_INTEGRATION.md`](docs/COLIBRI_INTEGRATION.md).
+
+## Immediate Android experiment
+
+On an Android phone with the current Termux build installed, clone this repository and run:
+
+```bash
+git clone https://github.com/aiwithenoch/Sankofa-Mini-PC-Android-.git
+cd Sankofa-Mini-PC-Android-
+bash experiments/colibri-termux/probe.sh
+```
+
+The probe:
+
+- records Android, CPU, RAM, storage and compiler details;
+- installs only the build tools required for the experiment;
+- clones a shallow copy of Colibri;
+- checks whether Termux clang can build an OpenMP program;
+- attempts a native ARM64 build;
+- runs Colibri's bundled tiny self-test when the build succeeds;
+- writes a complete log without downloading any large model weights.
+
+The result log is saved under:
+
+```text
+~/.sankofa/experiments/colibri-termux/
+```
+
+A successful compile is only the first proof. It does not establish usable generation speed, phone thermal stability, or K3 compatibility.
 
 ## Quick start
 
@@ -81,7 +123,7 @@ sankofa check --json
 
 The checker reports Android version, CPU architecture, SoC when available, RAM, storage, thermal sensors, and a compatibility tier.
 
-**Important:** exact Kimi K3 requirements cannot be finalized until the public checkpoint is inspected. The current checker verifies whether the phone can run the Sankofa foundation and labels unusually powerful devices as K3 research candidates.
+**Important:** exact Kimi K3 requirements cannot be finalized until an official checkpoint is available and inspected. The current checker verifies whether the phone can run the Sankofa foundation and labels unusually powerful devices as K3 research candidates.
 
 ## Commands
 
@@ -129,17 +171,18 @@ Sankofa local API server
        │
        ├── SQLite memory
        ├── Device/resource monitor
-       ├── Agent runtime           [planned]
-       ├── Browser worker          [planned]
-       ├── Model manager           [planned]
+       ├── Agent runtime                 [planned]
+       ├── Browser worker                [planned]
+       ├── Model manager                 [planned]
        └── Model backend interface
                   │
-                  ├── Mock backend [working]
-                  ├── Small local backend [next]
-                  └── Kimi K3 backend [research]
+                  ├── Mock backend       [working]
+                  ├── llama.cpp adapter  [planned]
+                  ├── Colibri adapter    [Android experiment]
+                  └── Kimi K3 backend    [research]
 ```
 
-Read [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for design boundaries and [`docs/ROADMAP.md`](docs/ROADMAP.md) for milestones.
+Read [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for design boundaries, [`docs/COLIBRI_INTEGRATION.md`](docs/COLIBRI_INTEGRATION.md) for the runtime evaluation, and [`docs/ROADMAP.md`](docs/ROADMAP.md) for milestones.
 
 ## Data location
 
@@ -148,6 +191,7 @@ Runtime data is stored under:
 ```text
 ~/.sankofa/
 ├── data/sankofa.db
+├── experiments/
 ├── logs/server.log
 ├── models/
 └── run/sankofa.pid
@@ -165,7 +209,7 @@ Sankofa binds to `127.0.0.1` by default, so only the phone can access it. Do not
 curl -fsSL https://raw.githubusercontent.com/aiwithenoch/Sankofa-Mini-PC-Android-/main/uninstall.sh | bash
 ```
 
-The uninstaller preserves `~/.sankofa` to avoid deleting conversations or downloaded models accidentally.
+The uninstaller preserves `~/.sankofa` to avoid deleting conversations, experiment logs or downloaded models accidentally.
 
 ## Kimi K3 mission
 
@@ -173,12 +217,12 @@ The long-term research target is strict:
 
 > Run the complete Kimi K3 architecture and all required weights locally on one Android phone, without an inference API, remote GPU, or second computer.
 
-The foundation does not claim that this milestone has already been achieved. Research will focus on expert-aware quantization, out-of-core weight streaming, cache-aware MoE execution, and Android CPU/GPU/NPU scheduling.
+The project does not claim that this milestone has already been achieved. The work requires an official checkpoint, an exact architecture implementation, model-size analysis, expert-aware packaging, out-of-core execution, reference-output validation, and measured Android performance.
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md). Technical claims must be reproducible and clearly labeled as measured, projected, or unverified.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Technical claims must be reproducible and clearly labelled as measured, projected, or unverified.
 
-## License
+## Licences
 
-Sankofa Mini PC source code is licensed under the MIT License. Model weights retain their own licences and are not included in this repository.
+Sankofa Mini PC source code is licensed under the MIT License. Model weights and external runtimes retain their own licences and are not included unless explicitly documented.
