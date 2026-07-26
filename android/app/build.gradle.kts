@@ -8,6 +8,7 @@ plugins {
 android {
     namespace = "com.sankofa.minipc"
     compileSdk = 35
+    ndkVersion = "27.2.12479018"
 
     defaultConfig {
         applicationId = "com.sankofa.minipc"
